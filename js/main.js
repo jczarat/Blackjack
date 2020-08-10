@@ -3,10 +3,6 @@
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
-const lookup = {
-    '1': 'computer',
-    '-1': 'player'
-}
 
 /*----- app's state (variables) -----*/
 
@@ -35,11 +31,11 @@ const playerScoreElement = document.querySelector('#playerscore');
 playAgainButton.addEventListener('click', init);
 dealButton.addEventListener('click', deal);
 hitButton.addEventListener('click', hit);
-//standButton.addEventListener('click', stand);
+standButton.addEventListener('click', stand);
 
 
 /*----- functions -----*/
-
+/*----- initialization -----*/
 init();
 
 function init() {
@@ -81,6 +77,14 @@ function buildShuffledDeck() {
     return shuffledDeck;
   }
 
+
+
+
+
+
+
+/*----- User Actions ----*/
+
 function deal() {
     for (i = 0; i < 2; i++) {
         let poppedCard = shuffledDeck.pop();
@@ -99,7 +103,6 @@ function deal() {
     dealButton.style.visibility = 'hidden';
     hitButton.style.visibility = 'visible';
     standButton.style.visibility = 'visible';
-    console.log(playerHand);
     renderDeal();
   }
 
@@ -107,11 +110,27 @@ function hit() {
     let poppedCard = shuffledDeck.pop();
     playerHand.push(poppedCard);
     playerScore += poppedCard.value;
-    console.log(playerHand)
-    playerScore > 21 ? winner = -1 : winner = null;
-    console.log(winner);
     renderHit();
+    checkForBust();
 }
+
+function stand() {
+    while (computerScore <= 17) {
+        let poppedCard = shuffledDeck.pop();
+        computerHand.push(poppedCard);
+        computerScore += poppedCard.value;
+        console.log(computerHand)
+        console.log(computerScore);
+    }
+    renderStand()
+    determineWinner()
+}
+
+
+
+
+
+/*----- Render Functions -----*/
 
 function renderDeal() {
     computerHand.forEach(card => {
@@ -134,12 +153,44 @@ function renderHit() {
     newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face}`);
     playerSection.appendChild(newDiv);
     playerScoreElement.textContent = playerScore;
+}
+
+function renderStand() {
+    for (let i = 2; i < computerHand.length; i++) {
+        let newDiv = document.createElement('div');
+        newDiv.setAttribute('class', `card ${computerHand[i].face}`);
+        computerSection.appendChild(newDiv);
+        computerScoreElement.textContent = computerScore;
+    }
+}
+
+
+
+
+
+
+
+
+/*----- Win Logic -----*/
+
+function checkForBust() {
+    if (playerScore > 21) {
+        winner = 'computer';
+    }
     winner ? playAgainButton.style.visibility = 'visible' : playAgainButton.style.visibility = 'hidden';
+    console.log(winner);
 }
 
 function determineWinner() {
-
+    if (computerScore > 21){
+        winner = 'player'
+    } else if (playerScore === computerScore) {
+        winner = 'tie';
+    } else if (playerScore > computerScore) {
+        winner = 'player';
+    } else {
+        winner = 'computer';
+    }
+    winner ? playAgainButton.style.visibility = 'visible' : playAgainButton.style.visibility = 'hidden';
+    console.log(winner);
 }
-
-
-
