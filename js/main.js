@@ -21,7 +21,9 @@ let winner;
 
 /*----- event listeners -----*/
 
-
+const playAgainButton = document.querySelector('#playagain');
+const hitButton = document.querySelector('#hit');
+const standButton = document.querySelector('#stand');
 
 
 /*----- functions -----*/
@@ -37,6 +39,9 @@ function init() {
     computerScore;
     playerScore;
     winner = null;
+    playAgainButton.style.visibility = 'hidden';
+    hitButton.style.visibility = 'hidden';
+    standButton.style.visibility = 'hidden';
 }
 
 function buildMasterDeck() {
