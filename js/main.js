@@ -3,6 +3,10 @@
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
+const lookup = {
+    '1': 'computer',
+    '-1': 'player'
+}
 
 /*----- app's state (variables) -----*/
 
@@ -14,20 +18,27 @@ let computerScore;
 let playerScore;
 let winner;
 
-
 /*----- cached element references -----*/
 
+const computerSection = document.querySelector('#computercards');
+const playerSection = document.querySelector('#playercards');
+const dealButton = document.querySelector('#deal');
+const playAgainButton = document.querySelector('#playagain');
+const hitButton = document.querySelector('#hit');
+const standButton = document.querySelector('#stand');
+const computerScoreElement = document.querySelector('#computerscore');
+const playerScoreElement = document.querySelector('#playerscore');
 
 
 /*----- event listeners -----*/
 
-const playAgainButton = document.querySelector('#playagain');
-const hitButton = document.querySelector('#hit');
-const standButton = document.querySelector('#stand');
+playAgainButton.addEventListener('click', init);
+dealButton.addEventListener('click', deal);
+hitButton.addEventListener('click', hit);
+//standButton.addEventListener('click', stand);
 
 
 /*----- functions -----*/
-
 
 init();
 
@@ -42,6 +53,7 @@ function init() {
     playAgainButton.style.visibility = 'hidden';
     hitButton.style.visibility = 'hidden';
     standButton.style.visibility = 'hidden';
+       renderDeal();
 }
 
 function buildMasterDeck() {
@@ -60,8 +72,6 @@ function buildMasterDeck() {
     return deck;
   }
 
-  console.log(masterDeck);
-
 function buildShuffledDeck() {
     shuffledDeck = [];
     masterDeck.forEach(card => {
@@ -71,4 +81,39 @@ function buildShuffledDeck() {
     return shuffledDeck;
   }
 
-  console.log(shuffledDeck);
+function deal() {
+    for (i = 0; i < 2; i++) {
+        let poppedCard = shuffledDeck.pop();
+        computerHand.push(poppedCard);
+    }
+    for (i = 0; i < 2; i++) {
+        let poppedCard = shuffledDeck.pop();
+        playerHand.push(poppedCard);
+    }
+    computerScore = computerHand.reduce((acc, card) => {
+        return acc+= card.value;
+    }, 0);
+    playerScore = playerHand.reduce((acc, card) => {
+        return acc+= card.value;
+    }, 0);
+    dealButton.style.visibility = 'hidden';
+    hitButton.style.visibility = 'visible';
+    standButton.style.visibility = 'visible';
+    console.log(playerHand);
+    renderDeal();
+  }
+
+function renderDeal() {
+    computerHand.forEach(card => {
+        let newDiv = document.createElement('div');
+        newDiv.setAttribute('class', `card ${card.face}`);
+        computerSection.appendChild(newDiv);
+    });
+    playerHand.forEach(card => {
+        let newDiv = document.createElement('div');
+        newDiv.setAttribute('class', `card ${card.face}`);
+        playerSection.appendChild(newDiv);
+    })
+    computerScoreElement.textContent = computerScore;
+    playerScoreElement.textContent = playerScore;
+}
