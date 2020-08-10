@@ -24,6 +24,8 @@ const hitButton = document.querySelector('#hit');
 const standButton = document.querySelector('#stand');
 const computerScoreElement = document.querySelector('#computerscore');
 const playerScoreElement = document.querySelector('#playerscore');
+const messageElement = document.querySelector('#message');
+
 
 
 /*----- event listeners -----*/
@@ -32,6 +34,7 @@ playAgainButton.addEventListener('click', init);
 dealButton.addEventListener('click', deal);
 hitButton.addEventListener('click', hit);
 standButton.addEventListener('click', stand);
+
 
 
 /*----- functions -----*/
@@ -43,13 +46,10 @@ function init() {
     shuffledDeck = buildShuffledDeck()
     computerHand = [];
     playerHand = [];
-    computerScore;
-    playerScore;
+    computerScore = 0;
+    playerScore = 0;
     winner = null;
-    playAgainButton.style.visibility = 'hidden';
-    hitButton.style.visibility = 'hidden';
-    standButton.style.visibility = 'hidden';
-    renderDeal();
+    renderInit();
 }
 
 function buildMasterDeck() {
@@ -79,10 +79,6 @@ function buildShuffledDeck() {
 
 
 
-
-
-
-
 /*----- User Actions ----*/
 
 function deal() {
@@ -100,9 +96,6 @@ function deal() {
     playerScore = playerHand.reduce((acc, card) => {
         return acc+= card.value;
     }, 0);
-    dealButton.style.visibility = 'hidden';
-    hitButton.style.visibility = 'visible';
-    standButton.style.visibility = 'visible';
     renderDeal();
   }
 
@@ -111,7 +104,6 @@ function hit() {
     playerHand.push(poppedCard);
     playerScore += poppedCard.value;
     renderHit();
-    checkForBust();
 }
 
 function stand() {
@@ -119,18 +111,25 @@ function stand() {
         let poppedCard = shuffledDeck.pop();
         computerHand.push(poppedCard);
         computerScore += poppedCard.value;
-        console.log(computerHand)
-        console.log(computerScore);
     }
     renderStand()
-    determineWinner()
 }
 
 
 
-
-
 /*----- Render Functions -----*/
+
+function renderInit() {
+    dealButton.style.visibility = 'visible'
+    playAgainButton.style.visibility = 'hidden';
+    hitButton.style.visibility = 'hidden';
+    standButton.style.visibility = 'hidden';
+    computerSection.innerHTML = '';
+    playerSection.innerHTML = '';
+    computerScoreElement.textContent = '';
+    playerScoreElement.textContent = '';
+    messageElement.textContent = `Click "deal" to play.`
+}
 
 function renderDeal() {
     computerHand.forEach(card => {
@@ -145,6 +144,10 @@ function renderDeal() {
     })
     computerScoreElement.textContent = computerScore;
     playerScoreElement.textContent = playerScore;
+    dealButton.style.visibility = 'hidden';
+    hitButton.style.visibility = 'visible';
+    standButton.style.visibility = 'visible';
+    messageElement.textContent = `Hit or Stand?`;
 }
 
 function renderHit() {
@@ -153,6 +156,7 @@ function renderHit() {
     newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face}`);
     playerSection.appendChild(newDiv);
     playerScoreElement.textContent = playerScore;
+    checkForBust();
 }
 
 function renderStand() {
@@ -162,23 +166,34 @@ function renderStand() {
         computerSection.appendChild(newDiv);
         computerScoreElement.textContent = computerScore;
     }
+    determineWinner()
 }
 
-
-
-
-
-
-
+function renderMessage() {
+    if (winner === 'player') {
+        messageElement.textContent = `The Player Wins!`;
+    } else if (winner === 'computer') {
+        messageElement.textContent = `The Dealer Wins!`;
+    } else {
+        messageElement.textContent = `It's a push!`;
+    }
+}
 
 /*----- Win Logic -----*/
 
-function checkForBust() {
-    if (playerScore > 21) {
-        winner = 'computer';
+function endHand() {
+    if (winner) {
+        playAgainButton.style.visibility = 'visible';
+        hitButton.style.visibility = 'hidden';
+        standButton.style.visibility = 'hidden';
+        renderMessage();
     }
-    winner ? playAgainButton.style.visibility = 'visible' : playAgainButton.style.visibility = 'hidden';
+}
+
+function checkForBust() {
+    if (playerScore > 21) winner = 'computer';
     console.log(winner);
+    endHand();
 }
 
 function determineWinner() {
@@ -191,6 +206,8 @@ function determineWinner() {
     } else {
         winner = 'computer';
     }
-    winner ? playAgainButton.style.visibility = 'visible' : playAgainButton.style.visibility = 'hidden';
     console.log(winner);
+    endHand();
 }
+
+
