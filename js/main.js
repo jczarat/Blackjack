@@ -53,7 +53,7 @@ function init() {
     playAgainButton.style.visibility = 'hidden';
     hitButton.style.visibility = 'hidden';
     standButton.style.visibility = 'hidden';
-       renderDeal();
+    renderDeal();
 }
 
 function buildMasterDeck() {
@@ -103,6 +103,16 @@ function deal() {
     renderDeal();
   }
 
+function hit() {
+    let poppedCard = shuffledDeck.pop();
+    playerHand.push(poppedCard);
+    playerScore += poppedCard.value;
+    console.log(playerHand)
+    playerScore > 21 ? winner = -1 : winner = null;
+    console.log(winner);
+    renderHit();
+}
+
 function renderDeal() {
     computerHand.forEach(card => {
         let newDiv = document.createElement('div');
@@ -117,3 +127,19 @@ function renderDeal() {
     computerScoreElement.textContent = computerScore;
     playerScoreElement.textContent = playerScore;
 }
+
+function renderHit() {
+    let newCardIndex = playerHand.length - 1;
+    let newDiv = document.createElement('div');
+    newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face}`);
+    playerSection.appendChild(newDiv);
+    playerScoreElement.textContent = playerScore;
+    winner ? playAgainButton.style.visibility = 'visible' : playAgainButton.style.visibility = 'hidden';
+}
+
+function determineWinner() {
+
+}
+
+
+
