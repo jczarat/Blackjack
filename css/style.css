@@ -1,11 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
+/* -------- PARENT ELEMENTS ------- */
 body {
     background: radial-gradient(#00bf20, darkgreen);
     font-family: 'Bebas Neue', cursive;
     text-align: center;
     height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 190px 400px 400px 100px;
 }
+
+/* -------- TEXT/TITLES ------- */
 
 h1 {
     font-size: 80px;
@@ -15,6 +21,28 @@ h2 {
     font-family: 'Open Sans', sans-serif;
 }
 
+#message {
+    margin-top: -50px;
+    font-size: 35px;
+}
+
+#playertitle {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 50px;
+}
+
+#computertitle {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 50px;
+}
+
+.scores {
+    font-size: 50px;
+    margin: -25px 0 20px 0;
+}
+
+/* -------- BUTTONS ------- */
+
 button {
     font-family: 'Open Sans', sans-serif;
     font-size: 22px;
@@ -23,26 +51,11 @@ button {
     width: 120px;
     height: 60px;
     border-radius: 10px;
-    
+    margin: 0px 20px;
 }
 
-section {
-    margin-top: -70px;
-}
-
-
-.scores {
-    font-size: 50px;
-    margin: -25px 0 20px 0;
-}
-
-#message {
-    margin-top: -50px;
-    font-size: 35px;
-}
-
-#playersection {
-    margin-top: 40px;
+#bottombuttons {
+    margin: 40px;
 }
 
 #hit {
@@ -61,14 +74,38 @@ section {
     width: 250px;
     height: 70px;
     font-size: 30px;
+    display: block;
+    margin: 0 auto;
+
 }
 
-#playertitle {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 50px;
-}
 
-#computertitle {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 50px;
+
+@media only screen and (min-width: 800px) {
+    body {
+        display: grid;
+        grid-template-columns: 1fr 2fr 2fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+
+    }
+
+    header {
+        grid-column: 1 / 5;
+    }
+
+    #bottombuttons {
+       grid-column: 1 / 5;
+    }
+
+    #playersection {
+        grid-column: 3/ 4;
+        margin-top: 0px;
+        margin-top: -70px;
+    }
+
+    #computersection {
+        grid-column: 2 / 3;
+        margin-top: 0px;
+        margin-top: -70px;
+    }
 }
