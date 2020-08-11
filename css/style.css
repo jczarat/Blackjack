@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+body {
+    background: radial-gradient(#00bf20, darkgreen);
+    font-family: 'Bebas Neue', cursive;
+    text-align: center;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 80px;
+}
+
+h2 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+button {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    border: 4px solid black;
+    width: 120px;
+    height: 60px;
+    border-radius: 10px;
+    
+}
+
+section {
+    margin-top: -70px;
+}
+
+
+.scores {
+    font-size: 50px;
+    margin: -25px 0 20px 0;
+}
+
+#message {
+    margin-top: -50px;
+    font-size: 35px;
+}
+
+#playersection {
+    margin-top: 40px;
+}
+
+#hit {
+    background-color: rgb(20, 34, 101);
+    border-color: rgb(20, 34, 101);
+    color: white;
+}
+
+#stand {
+    background-color: white;
+    border-color: rgb(20, 34, 101);
+    color: rgb(20, 34, 101);
+}
+
+#playagain {
+    width: 250px;
+    height: 70px;
+    font-size: 30px;
+}
+
+#playertitle {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 50px;
+}
+
+#computertitle {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 50px;
+}

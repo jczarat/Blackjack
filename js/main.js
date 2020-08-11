@@ -25,6 +25,8 @@ const standButton = document.querySelector('#stand');
 const computerScoreElement = document.querySelector('#computerscore');
 const playerScoreElement = document.querySelector('#playerscore');
 const messageElement = document.querySelector('#message');
+const computerTitle = document.querySelector('#computertitle');
+const playerTitle = document.querySelector('#playertitle');
 
 
 
@@ -41,7 +43,7 @@ standButton.addEventListener('click', stand);
 /*----- initialization -----*/
 init();
 
-function init() {
+function init()  {
     masterDeck = buildMasterDeck();
     shuffledDeck = buildShuffledDeck()
     computerHand = [];
@@ -124,22 +126,24 @@ function renderInit() {
     playAgainButton.style.visibility = 'hidden';
     hitButton.style.visibility = 'hidden';
     standButton.style.visibility = 'hidden';
+    playerTitle.style.visibility = 'hidden';
+    computerTitle.style.visibility = 'hidden';
     computerSection.innerHTML = '';
     playerSection.innerHTML = '';
     computerScoreElement.textContent = '';
     playerScoreElement.textContent = '';
-    messageElement.textContent = `Click "deal" to play.`
+    messageElement.textContent = `Click "DEAL" to play.`
 }
 
 function renderDeal() {
     computerHand.forEach(card => {
         let newDiv = document.createElement('div');
-        newDiv.setAttribute('class', `card ${card.face}`);
+        newDiv.setAttribute('class', `card ${card.face} large`);
         computerSection.appendChild(newDiv);
     });
     playerHand.forEach(card => {
         let newDiv = document.createElement('div');
-        newDiv.setAttribute('class', `card ${card.face}`);
+        newDiv.setAttribute('class', `card ${card.face} large`);
         playerSection.appendChild(newDiv);
     })
     computerScoreElement.textContent = computerScore;
@@ -147,13 +151,16 @@ function renderDeal() {
     dealButton.style.visibility = 'hidden';
     hitButton.style.visibility = 'visible';
     standButton.style.visibility = 'visible';
+    playerTitle.style.visibility =  'visible';
+    computerTitle.style.visibility = 'visible';
     messageElement.textContent = `Hit or Stand?`;
+    checkForBlackjack();
 }
 
 function renderHit() {
     let newCardIndex = playerHand.length - 1;
     let newDiv = document.createElement('div');
-    newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face}`);
+    newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face } large`);
     playerSection.appendChild(newDiv);
     playerScoreElement.textContent = playerScore;
     checkForBust();
@@ -162,7 +169,7 @@ function renderHit() {
 function renderStand() {
     for (let i = 2; i < computerHand.length; i++) {
         let newDiv = document.createElement('div');
-        newDiv.setAttribute('class', `card ${computerHand[i].face}`);
+        newDiv.setAttribute('class', `card ${computerHand[i].face} large`);
         computerSection.appendChild(newDiv);
         computerScoreElement.textContent = computerScore;
     }
@@ -190,9 +197,13 @@ function endHand() {
     }
 }
 
+function checkForBlackjack() {
+    if (playerScore === 21) winner = 'player';
+    endHand();
+}
+
 function checkForBust() {
     if (playerScore > 21) winner = 'computer';
-    console.log(winner);
     endHand();
 }
 
@@ -206,8 +217,5 @@ function determineWinner() {
     } else {
         winner = 'computer';
     }
-    console.log(winner);
     endHand();
 }
-
-
