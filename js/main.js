@@ -70,6 +70,7 @@ function buildMasterDeck() {
     return deck;
   }
 
+
 function buildShuffledDeck() {
     shuffledDeck = [];
     masterDeck.forEach(card => {
@@ -203,7 +204,17 @@ function checkForBlackjack() {
 }
 
 function checkForBust() {
-    if (playerScore > 21) winner = 'computer';
+    if (playerScore > 21) {
+        playerHand.forEach(card => {
+            if (card.value === 11) {
+                card.value = 1;
+                playerScore = playerScore - 10;
+                playerScoreElement.textContent = playerScore;
+            } else if (playerScore > 21) {
+                winner = 'computer';
+            }
+        })
+    } 
     endHand();
 }
 
@@ -219,3 +230,13 @@ function determineWinner() {
     }
     endHand();
 }
+
+
+
+// if (playerScore > 21) {
+//     if(playerHand.some(card => {
+//         return card.value === 11;
+//     })) {
+//         card.value = 1;
+//     }
+// } winner = 'computer';

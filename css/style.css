@@ -51,11 +51,10 @@ button {
     width: 120px;
     height: 60px;
     border-radius: 10px;
-    margin: 0px 20px;
 }
 
 #bottombuttons {
-    margin: 40px;
+    margin: 40px
 }
 
 #hit {
@@ -75,7 +74,7 @@ button {
     height: 70px;
     font-size: 30px;
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 
 
 }
 
