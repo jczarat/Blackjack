@@ -13,6 +13,7 @@ let playerHand;
 let computerScore;
 let playerScore;
 let winner;
+let faceDown;
 
 /*----- cached element references -----*/
 
@@ -85,11 +86,12 @@ function buildShuffledDeck() {
 /*----- User Actions ----*/
 
 function deal() {
-    // for (i = 0; i < 2; i++) {
-    //     let poppedCard = shuffledDeck.pop();
-    //     computerHand.push(poppedCard);
-    // }
-    computerHand = [{face: "cA", value: 11}, {face: 'h05', value: 5}]
+    for (i = 0; i < 2; i++) {
+        let poppedCard = shuffledDeck.pop();
+        computerHand.push(poppedCard);
+    }
+    // Use code below to test aces logic
+    // computerHand = [{face: "cA", value: 11}, {face: 'h05', value: 5}]
     for (i = 0; i < 2; i++) {
         let poppedCard = shuffledDeck.pop();
         playerHand.push(poppedCard);
@@ -151,17 +153,18 @@ function renderInit() {
 }
 
 function renderDeal() {
-    computerHand.forEach(card => {
-        let newDiv = document.createElement('div');
-        newDiv.setAttribute('class', `card ${card.face} large`);
-        computerSection.appendChild(newDiv);
-    });
+    faceDown = document.createElement('div');
+    faceDown.setAttribute('class', 'card back-red large');
+    computerSection.appendChild(faceDown);
+    let faceUp = document.createElement('div');
+    faceUp.setAttribute('class', `card ${computerHand[1].face} large`);
+    computerSection.appendChild(faceUp);
     playerHand.forEach(card => {
         let newDiv = document.createElement('div');
         newDiv.setAttribute('class', `card ${card.face} large`);
         playerSection.appendChild(newDiv);
     })
-    computerScoreElement.textContent = computerScore;
+    computerScoreElement.textContent = computerHand[1].value;
     playerScoreElement.textContent = playerScore;
     dealButton.style.visibility = 'hidden';
     hitButton.style.visibility = 'visible';
@@ -182,6 +185,8 @@ function renderHit() {
 }
 
 function renderStand() {
+    faceDown.setAttribute('class', `card ${computerHand[0].face} large`)
+    computerScoreElement.textContent = computerScore;
     for (let i = 2; i < computerHand.length; i++) {
         let newDiv = document.createElement('div');
         newDiv.setAttribute('class', `card ${computerHand[i].face} large`);
