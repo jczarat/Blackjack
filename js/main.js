@@ -110,11 +110,21 @@ function hit() {
 }
 
 function stand() {
-    while (computerScore <= 17) {
+    while (computerScore < 17) {
         let poppedCard = shuffledDeck.pop();
         computerHand.push(poppedCard);
         computerScore += poppedCard.value;
     }
+    if (computerScore > 21) {
+        computerHand.forEach(card => {
+            if (card.value === 11) {
+                card.value = 1;
+                computerScore = computerScore - 10;
+                computerScoreElement.textContent = playerScore;
+                stand();
+            } 
+        })
+    } 
     renderStand()
 }
 
@@ -230,13 +240,3 @@ function determineWinner() {
     }
     endHand();
 }
-
-
-
-// if (playerScore > 21) {
-//     if(playerHand.some(card => {
-//         return card.value === 11;
-//     })) {
-//         card.value = 1;
-//     }
-// } winner = 'computer';
