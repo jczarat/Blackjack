@@ -85,10 +85,11 @@ function buildShuffledDeck() {
 /*----- User Actions ----*/
 
 function deal() {
-    for (i = 0; i < 2; i++) {
-        let poppedCard = shuffledDeck.pop();
-        computerHand.push(poppedCard);
-    }
+    // for (i = 0; i < 2; i++) {
+    //     let poppedCard = shuffledDeck.pop();
+    //     computerHand.push(poppedCard);
+    // }
+    computerHand = [{face: "cA", value: 11}, {face: 'h05', value: 5}]
     for (i = 0; i < 2; i++) {
         let poppedCard = shuffledDeck.pop();
         playerHand.push(poppedCard);
@@ -110,21 +111,24 @@ function hit() {
 }
 
 function stand() {
-    while (computerScore < 17) {
-        let poppedCard = shuffledDeck.pop();
-        computerHand.push(poppedCard);
-        computerScore += poppedCard.value;
+    dealerHits();
+    function dealerHits() {
+        while (computerScore < 17) {
+            let poppedCard = shuffledDeck.pop();
+            computerHand.push(poppedCard);
+            computerScore += poppedCard.value;
+        }
+        if (computerScore > 21) {
+            computerHand.forEach(card => {
+                if (card.value === 11) {
+                    card.value = 1;
+                    computerScore = computerScore - 10;
+                    computerScoreElement.textContent = playerScore;
+                    dealerHits();
+                } 
+            })
+        }
     }
-    if (computerScore > 21) {
-        computerHand.forEach(card => {
-            if (card.value === 11) {
-                card.value = 1;
-                computerScore = computerScore - 10;
-                computerScoreElement.textContent = playerScore;
-                stand();
-            } 
-        })
-    } 
     renderStand()
 }
 
@@ -174,7 +178,7 @@ function renderHit() {
     newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face } large`);
     playerSection.appendChild(newDiv);
     playerScoreElement.textContent = playerScore;
-    checkForBust();
+    checkForPlayerBust();
 }
 
 function renderStand() {
@@ -184,7 +188,7 @@ function renderStand() {
         computerSection.appendChild(newDiv);
         computerScoreElement.textContent = computerScore;
     }
-    determineWinner()
+    determineWinner();
 }
 
 function renderMessage() {
@@ -213,7 +217,7 @@ function checkForBlackjack() {
     endHand();
 }
 
-function checkForBust() {
+function checkForPlayerBust() {
     if (playerScore > 21) {
         playerHand.forEach(card => {
             if (card.value === 11) {
