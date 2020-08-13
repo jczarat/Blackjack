@@ -96,9 +96,8 @@ function hit() {
 
 function stand() {
     while (computerScore < 17) {
-        let poppedCard = shuffledDeck.pop();
-        computerHand.push(poppedCard);
-        computerScore += poppedCard.value;
+        computerHand.push(shuffledDeck.pop());
+        computerScore = findScore(computerHand, computerScore);
         }
     if (computerScore > 21) {
         computerScore = checkForAce(computerHand, computerScore, computerScoreElement);
