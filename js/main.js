@@ -40,9 +40,9 @@ standButton.addEventListener('click', stand);
 
 init();
 
-function init()  {
+function init() {
     masterDeck = buildMasterDeck();
-    shuffledDeck = buildShuffledDeck()
+    shuffledDeck = buildShuffledDeck();
     computerHand = [];
     playerHand = [];
     computerScore = 0;
@@ -62,16 +62,16 @@ function buildMasterDeck() {
       });
     });
     return deck;
-  }
+}
 
 function buildShuffledDeck() {
     shuffledDeck = [];
-    masterDeck.forEach(card => {
+    masterDeck.forEach(function(card) {
         const rndIdx = Math.floor(Math.random() * masterDeck.length);
         shuffledDeck.push(masterDeck[rndIdx]);
-    })
+    });
     return shuffledDeck;
-  }
+}
 
 /*----- User Actions ----*/
 
@@ -84,10 +84,10 @@ function deal() {
     if (computerScore === 22) pocketAce(computerHand, computerScore);
     renderDeal();
     checkForBlackjack();
-  }
+}
 
 function hit() {
-    let poppedCard = shuffledDeck.pop();
+    const poppedCard = shuffledDeck.pop();
     playerHand.push(poppedCard);
     playerScore += poppedCard.value;
     renderHit();
@@ -116,26 +116,26 @@ function dealCards(hand) {
 }
 
 function findScore(hand, score) {
-    score = hand.reduce((acc, card) => {
+    score = hand.reduce(function(acc, card) {
         return acc+= card.value;
     }, 0);
     return score;
 }
 
 function pocketAce(hand, score) {
-        hand[0].value = 1;
-        score = findScore(hand, score);
-        return score;
+    hand[0].value = 1;
+    score = findScore(hand, score);
+    return score;
 }
 
 function checkForAce(hand, score, element) {
-    hand.forEach(card => {
+    hand.forEach(function(card) {
         if (card.value === 11) {
             card.value = 1;
-            score = findScore(hand, score)
+            score = findScore(hand, score);
             element.textContent = score; 
         }
-    })
+    });
     return score;
 }
 
@@ -146,7 +146,7 @@ function renderInit() {
     playerSection.innerHTML = '';
     computerScoreElement.textContent = '';
     playerScoreElement.textContent = '';
-    messageElement.textContent = `Click "DEAL" to play.`
+    messageElement.textContent = `Click "DEAL" to play.`;
     visibility('visible', 'hidden', 'hidden');
 }
 
@@ -154,14 +154,16 @@ function renderDeal() {
     faceDown = document.createElement('div');
     faceDown.setAttribute('class', 'card back-red large');
     computerSection.appendChild(faceDown);
-    let faceUp = document.createElement('div');
+    
+    const faceUp = document.createElement('div');
     faceUp.setAttribute('class', `card ${computerHand[1].face} large`);
     computerSection.appendChild(faceUp);
-    playerHand.forEach(card => {
-        let newDiv = document.createElement('div');
+
+    playerHand.forEach(function(card) {
+        const newDiv = document.createElement('div');
         newDiv.setAttribute('class', `card ${card.face} large`);
         playerSection.appendChild(newDiv);
-    })
+    });
     computerScoreElement.textContent = computerHand[1].value;
     playerScoreElement.textContent = playerScore;
     messageElement.textContent = `Hit or Stand?`;
@@ -169,8 +171,8 @@ function renderDeal() {
 }
 
 function renderHit() {
-    let newCardIndex = playerHand.length - 1;
-    let newDiv = document.createElement('div');
+    const newCardIndex = playerHand.length - 1;
+    const newDiv = document.createElement('div');
     newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face } large`);
     playerSection.appendChild(newDiv);
     playerScoreElement.textContent = playerScore;
@@ -178,7 +180,7 @@ function renderHit() {
 
 function renderStand() {
     for (let i = 2; i < computerHand.length; i++) {
-        let newDiv = document.createElement('div');
+        const newDiv = document.createElement('div');
         newDiv.setAttribute('class', `card ${computerHand[i].face} large`);
         computerSection.appendChild(newDiv);
         computerScoreElement.textContent = computerScore;
@@ -198,9 +200,9 @@ function renderMessage() {
 /*----- Helper Render Functions -----*/
 
 function visibility(deal, gameplay, playagain) {
-    dealButton.style.visibility = deal
-    hitButton.style.visibility = gameplay
-    standButton.style.visibility = gameplay
+    dealButton.style.visibility = deal;
+    hitButton.style.visibility = gameplay;
+    standButton.style.visibility = gameplay;
     computerTitle.style.visibility = gameplay;
     playerTitle.style.visibility = gameplay;
     playAgainButton.style.visibility = playagain;
@@ -225,7 +227,7 @@ function checkForPlayerBust() {
 
 function determineWinner() {
     if (computerScore > 21){
-        winner = 'player'
+        winner = 'player';
     } else if (playerScore === computerScore) {
         winner = 'tie';
     } else if (playerScore > computerScore) {
@@ -238,8 +240,8 @@ function determineWinner() {
 
 function endHand() {
     if (winner) {
-        visibility ('hidden', 'hidden', 'visible');
-        faceDown.setAttribute('class', `card ${computerHand[0].face} large`)
+        visibility('hidden', 'hidden', 'visible');
+        faceDown.setAttribute('class', `card ${computerHand[0].face} large`);
         computerScoreElement.textContent = computerScore;
         renderMessage();
     }
