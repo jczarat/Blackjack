@@ -92,17 +92,19 @@ function deal() {
     }
     // Use code below to test aces logic
     // computerHand = [{face: "cA", value: 11}, {face: 'h05', value: 5}]
-    for (i = 0; i < 2; i++) {
-        let poppedCard = shuffledDeck.pop();
-        playerHand.push(poppedCard);
+    // for (i = 0; i < 2; i++) {
+    //     let poppedCard = shuffledDeck.pop();
+    //     playerHand.push(poppedCard);
+    // }
+    playerHand = [{face: "cA", value: 11}, {face: 'dA', value: 11}]
+    computerScore = findScore(computerScore, computerHand);
+    playerScore = findScore(playerScore, playerHand);
+    if (playerScore === 22) {
+        playerHand[0].value = 1;
+        playerScore = findScore(playerScore, playerHand);
     }
-    computerScore = computerHand.reduce((acc, card) => {
-        return acc+= card.value;
-    }, 0);
-    playerScore = playerHand.reduce((acc, card) => {
-        return acc+= card.value;
-    }, 0);
     renderDeal();
+    //checkForAce(playerHand, playerScore, playerScoreElement);
   }
 
 function hit() {
@@ -125,7 +127,7 @@ function stand() {
                 if (card.value === 11) {
                     card.value = 1;
                     computerScore = computerScore - 10;
-                    computerScoreElement.textContent = playerScore;
+                    computerScoreElement.textContent = computerScore;
                     dealerHits();
                 } 
             })
@@ -133,6 +135,26 @@ function stand() {
     }
     renderStand()
 }
+
+function findScore(score, hand) {
+    score = hand.reduce((acc, card) => {
+        return acc+= card.value;
+    }, 0);
+    return score;
+}
+
+// function checkForAce(hand, score, element) {
+//     if (score > 21) {
+//     hand.forEach(card => {
+//         if (card.value === 11) {
+//             card.value = 1;
+//             score = score - 10;
+//             element.textContent = score; 
+//         }
+//     })
+//     }
+//     console.log(playerScore)
+// }
 
 
 
@@ -185,8 +207,6 @@ function renderHit() {
 }
 
 function renderStand() {
-    faceDown.setAttribute('class', `card ${computerHand[0].face} large`)
-    computerScoreElement.textContent = computerScore;
     for (let i = 2; i < computerHand.length; i++) {
         let newDiv = document.createElement('div');
         newDiv.setAttribute('class', `card ${computerHand[i].face} large`);
@@ -213,6 +233,8 @@ function endHand() {
         playAgainButton.style.visibility = 'visible';
         hitButton.style.visibility = 'hidden';
         standButton.style.visibility = 'hidden';
+        faceDown.setAttribute('class', `card ${computerHand[0].face} large`)
+        computerScoreElement.textContent = computerScore;
         renderMessage();
     }
 }
@@ -227,12 +249,13 @@ function checkForPlayerBust() {
         playerHand.forEach(card => {
             if (card.value === 11) {
                 card.value = 1;
-                playerScore = playerScore - 10;
+                playerScore = findScore(playerScore, playerHand);
                 playerScoreElement.textContent = playerScore;
-            } else if (playerScore > 21) {
-                winner = 'computer';
-            }
+            } 
         })
+    }
+    if (playerScore > 21) {
+        winner = 'computer';
     } 
     endHand();
 }
