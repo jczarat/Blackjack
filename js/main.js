@@ -3,7 +3,6 @@
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
-
 /*----- app's state (variables) -----*/
 
 let masterDeck;
@@ -29,8 +28,6 @@ const messageElement = document.querySelector('#message');
 const computerTitle = document.querySelector('#computertitle');
 const playerTitle = document.querySelector('#playertitle');
 
-
-
 /*----- event listeners -----*/
 
 playAgainButton.addEventListener('click', init);
@@ -38,10 +35,9 @@ dealButton.addEventListener('click', deal);
 hitButton.addEventListener('click', hit);
 standButton.addEventListener('click', stand);
 
-
-
 /*----- functions -----*/
-/*----- initialization -----*/
+/*----- Initialization -----*/
+
 init();
 
 function init()  {
@@ -57,20 +53,16 @@ function init()  {
 
 function buildMasterDeck() {
     const deck = [];
-    // Use nested forEach to generate card objects
     suits.forEach(function(suit) {
       ranks.forEach(function(rank) {
         deck.push({
-          // The 'face' property maps to the library's CSS classes for cards
           face: `${suit}${rank}`,
-          // Setting the 'value' property for game of blackjack, not war
           value: Number(rank) || (rank === 'A' ? 11 : 10)
         });
       });
     });
     return deck;
   }
-
 
 function buildShuffledDeck() {
     shuffledDeck = [];
@@ -81,30 +73,17 @@ function buildShuffledDeck() {
     return shuffledDeck;
   }
 
-
-
 /*----- User Actions ----*/
 
 function deal() {
-    for (i = 0; i < 2; i++) {
-        let poppedCard = shuffledDeck.pop();
-        computerHand.push(poppedCard);
-    }
-    // Use code below to test aces logic
-    // computerHand = [{face: "cA", value: 11}, {face: 'h05', value: 5}]
-    // for (i = 0; i < 2; i++) {
-    //     let poppedCard = shuffledDeck.pop();
-    //     playerHand.push(poppedCard);
-    // }
-    playerHand = [{face: "cA", value: 11}, {face: 'dA', value: 11}]
-    computerScore = findScore(computerScore, computerHand);
-    playerScore = findScore(playerScore, playerHand);
-    if (playerScore === 22) {
-        playerHand[0].value = 1;
-        playerScore = findScore(playerScore, playerHand);
-    }
+    dealCards(computerHand);
+    dealCards(playerHand);
+    computerScore = findScore(computerHand, computerScore);
+    playerScore = findScore(playerHand, playerScore);
+    if (playerScore === 22) pocketAce(playerHand, playerScore);
+    if (computerScore === 22) pocketAce(computerHand, computerScore);
     renderDeal();
-    //checkForAce(playerHand, playerScore, playerScoreElement);
+    checkForBlackjack();
   }
 
 function hit() {
@@ -112,66 +91,64 @@ function hit() {
     playerHand.push(poppedCard);
     playerScore += poppedCard.value;
     renderHit();
+    checkForPlayerBust();
 }
 
 function stand() {
-    dealerHits();
-    function dealerHits() {
-        while (computerScore < 17) {
-            let poppedCard = shuffledDeck.pop();
-            computerHand.push(poppedCard);
-            computerScore += poppedCard.value;
+    while (computerScore < 17) {
+        let poppedCard = shuffledDeck.pop();
+        computerHand.push(poppedCard);
+        computerScore += poppedCard.value;
         }
-        if (computerScore > 21) {
-            computerHand.forEach(card => {
-                if (card.value === 11) {
-                    card.value = 1;
-                    computerScore = computerScore - 10;
-                    computerScoreElement.textContent = computerScore;
-                    dealerHits();
-                } 
-            })
+    if (computerScore > 21) {
+        computerScore = checkForAce(computerHand, computerScore, computerScoreElement);
+        if (computerScore < 21) {
+            stand();
         }
     }
-    renderStand()
+    renderStand();
+    determineWinner();
 }
 
-function findScore(score, hand) {
+/*----- User Helper Functions -----*/
+
+function dealCards(hand) {
+    for (i = 0; i < 2; i++) hand.push(shuffledDeck.pop());
+}
+
+function findScore(hand, score) {
     score = hand.reduce((acc, card) => {
         return acc+= card.value;
     }, 0);
     return score;
 }
 
-// function checkForAce(hand, score, element) {
-//     if (score > 21) {
-//     hand.forEach(card => {
-//         if (card.value === 11) {
-//             card.value = 1;
-//             score = score - 10;
-//             element.textContent = score; 
-//         }
-//     })
-//     }
-//     console.log(playerScore)
-// }
+function pocketAce(hand, score) {
+        hand[0].value = 1;
+        score = findScore(hand, score);
+        return score;
+}
 
-
+function checkForAce(hand, score, element) {
+    hand.forEach(card => {
+        if (card.value === 11) {
+            card.value = 1;
+            score = findScore(hand, score)
+            element.textContent = score; 
+        }
+    })
+    return score;
+}
 
 /*----- Render Functions -----*/
 
 function renderInit() {
-    dealButton.style.visibility = 'visible'
-    playAgainButton.style.visibility = 'hidden';
-    hitButton.style.visibility = 'hidden';
-    standButton.style.visibility = 'hidden';
-    playerTitle.style.visibility = 'hidden';
-    computerTitle.style.visibility = 'hidden';
     computerSection.innerHTML = '';
     playerSection.innerHTML = '';
     computerScoreElement.textContent = '';
     playerScoreElement.textContent = '';
     messageElement.textContent = `Click "DEAL" to play.`
+    visibility('visible', 'hidden', 'hidden');
 }
 
 function renderDeal() {
@@ -188,13 +165,8 @@ function renderDeal() {
     })
     computerScoreElement.textContent = computerHand[1].value;
     playerScoreElement.textContent = playerScore;
-    dealButton.style.visibility = 'hidden';
-    hitButton.style.visibility = 'visible';
-    standButton.style.visibility = 'visible';
-    playerTitle.style.visibility =  'visible';
-    computerTitle.style.visibility = 'visible';
     messageElement.textContent = `Hit or Stand?`;
-    checkForBlackjack();
+    visibility('hidden', 'visible', 'hidden');
 }
 
 function renderHit() {
@@ -203,7 +175,6 @@ function renderHit() {
     newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face } large`);
     playerSection.appendChild(newDiv);
     playerScoreElement.textContent = playerScore;
-    checkForPlayerBust();
 }
 
 function renderStand() {
@@ -213,7 +184,6 @@ function renderStand() {
         computerSection.appendChild(newDiv);
         computerScoreElement.textContent = computerScore;
     }
-    determineWinner();
 }
 
 function renderMessage() {
@@ -226,18 +196,18 @@ function renderMessage() {
     }
 }
 
-/*----- Win Logic -----*/
+/*----- Helper Render Functions -----*/
 
-function endHand() {
-    if (winner) {
-        playAgainButton.style.visibility = 'visible';
-        hitButton.style.visibility = 'hidden';
-        standButton.style.visibility = 'hidden';
-        faceDown.setAttribute('class', `card ${computerHand[0].face} large`)
-        computerScoreElement.textContent = computerScore;
-        renderMessage();
-    }
+function visibility(deal, gameplay, playagain) {
+    dealButton.style.visibility = deal
+    hitButton.style.visibility = gameplay
+    standButton.style.visibility = gameplay
+    computerTitle.style.visibility = gameplay;
+    playerTitle.style.visibility = gameplay;
+    playAgainButton.style.visibility = playagain;
 }
+
+/*----- Win Logic -----*/
 
 function checkForBlackjack() {
     if (playerScore === 21) winner = 'player';
@@ -246,17 +216,11 @@ function checkForBlackjack() {
 
 function checkForPlayerBust() {
     if (playerScore > 21) {
-        playerHand.forEach(card => {
-            if (card.value === 11) {
-                card.value = 1;
-                playerScore = findScore(playerScore, playerHand);
-                playerScoreElement.textContent = playerScore;
-            } 
-        })
+        playerScore = checkForAce(playerHand, playerScore, playerScoreElement);
+        if (playerScore > 21) {
+            winner = 'computer';
+        } 
     }
-    if (playerScore > 21) {
-        winner = 'computer';
-    } 
     endHand();
 }
 
@@ -271,4 +235,13 @@ function determineWinner() {
         winner = 'computer';
     }
     endHand();
+}
+
+function endHand() {
+    if (winner) {
+        visibility ('hidden', 'hidden', 'visible');
+        faceDown.setAttribute('class', `card ${computerHand[0].face} large`)
+        computerScoreElement.textContent = computerScore;
+        renderMessage();
+    }
 }
