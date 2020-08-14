@@ -152,17 +152,12 @@ function renderInit() {
 
 function renderDeal() {
     faceDown = document.createElement('div');
-    faceDown.setAttribute('class', 'card back-red large');
-    computerSection.appendChild(faceDown);
-    
     const faceUp = document.createElement('div');
-    faceUp.setAttribute('class', `card ${computerHand[1].face} large`);
-    computerSection.appendChild(faceUp);
-
+    renderCard(faceDown, 'card back-red large', computerSection);
+    renderCard(faceUp, `card ${computerHand[1].face} large`, computerSection);
     playerHand.forEach(function(card) {
-        const newDiv = document.createElement('div');
-        newDiv.setAttribute('class', `card ${card.face} large`);
-        playerSection.appendChild(newDiv);
+        const playerDeal = document.createElement('div');
+        renderCard(playerDeal, `card ${card.face} large`, playerSection);
     });
     computerScoreElement.textContent = computerHand[1].value;
     playerScoreElement.textContent = playerScore;
@@ -171,18 +166,15 @@ function renderDeal() {
 }
 
 function renderHit() {
-    const newCardIndex = playerHand.length - 1;
-    const newDiv = document.createElement('div');
-    newDiv.setAttribute('class', `card ${playerHand[newCardIndex].face } large`);
-    playerSection.appendChild(newDiv);
+    const newHit= document.createElement('div');
+    renderCard(newHit, `card ${playerHand[playerHand.length - 1].face} large`, playerSection);
     playerScoreElement.textContent = playerScore;
 }
 
 function renderStand() {
     for (let i = 2; i < computerHand.length; i++) {
-        const newDiv = document.createElement('div');
-        newDiv.setAttribute('class', `card ${computerHand[i].face} large`);
-        computerSection.appendChild(newDiv);
+        const newStand = document.createElement('div');
+        renderCard(newStand, `card ${computerHand[i].face} large`, computerSection);
         computerScoreElement.textContent = computerScore;
     }
 }
@@ -206,6 +198,11 @@ function visibility(deal, gameplay, playagain) {
     computerTitle.style.visibility = gameplay;
     playerTitle.style.visibility = gameplay;
     playAgainButton.style.visibility = playagain;
+}
+
+function renderCard(divName, divClass, divParent) {
+    divName.setAttribute('class', divClass);
+    divParent.appendChild(divName);
 }
 
 /*----- Win Logic -----*/
