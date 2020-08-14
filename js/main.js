@@ -34,6 +34,8 @@ playAgainButton.addEventListener('click', init);
 dealButton.addEventListener('click', deal);
 hitButton.addEventListener('click', hit);
 standButton.addEventListener('click', stand);
+window.addEventListener('resize', function() {renderCardSize(playerSection)});
+window.addEventListener('resize', function() {renderCardSize(computerSection)});
 
 /*----- functions -----*/
 /*----- Initialization -----*/
@@ -158,30 +160,34 @@ function renderInit() {
 function renderDeal() {
     faceDown = document.createElement('div');
     const faceUp = document.createElement('div');
-    renderCard(faceDown, 'card back-red', computerSection);
-    renderCard(faceUp, `card ${computerHand[1].face}`, computerSection);
+    renderCard(faceDown, 'card back-red small', computerSection);
+    renderCard(faceUp, `card ${computerHand[1].face} small`, computerSection);
     playerHand.forEach(function(card) {
         const playerDeal = document.createElement('div');
-        renderCard(playerDeal, `card ${card.face}`, playerSection);
+        renderCard(playerDeal, `card ${card.face} small`, playerSection);
     });
     computerScoreElement.textContent = computerHand[1].value;
     playerScoreElement.textContent = playerScore;
     messageElement.textContent = `Hit or Stand?`;
     visibility('hidden', 'visible', 'hidden');
+    renderCardSize(playerSection);
+    renderCardSize(computerSection);
 }
 
 function renderHit() {
     const newHit= document.createElement('div');
-    renderCard(newHit, `card ${playerHand[playerHand.length - 1].face}`, playerSection);
+    renderCard(newHit, `card ${playerHand[playerHand.length - 1].face} small`, playerSection);
     playerScoreElement.textContent = playerScore;
+    renderCardSize(playerSection);
 }
 
 function renderStand() {
     for (let i = 2; i < computerHand.length; i++) {
         const newStand = document.createElement('div');
-        renderCard(newStand, `card ${computerHand[i].face}`, computerSection);
+        renderCard(newStand, `card ${computerHand[i].face} small`, computerSection);
         computerScoreElement.textContent = computerScore;
     }
+    renderCardSize(computerSection);
 }
 
 function renderMessage() {
@@ -191,6 +197,21 @@ function renderMessage() {
         messageElement.textContent = `The Dealer Wins!`;
     } else {
         messageElement.textContent = `It's a push!`;
+    }
+}
+
+function renderCardSize(section) {
+    const cards = section.children;
+    if (window.innerWidth < 800) {
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('large');
+            cards[i].classList.add('small');
+        }
+    } else {
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('small');
+            cards[i].classList.add('large');
+        }
     }
 }
 
@@ -243,8 +264,9 @@ function determineWinner() {
 function endHand() {
     if (winner) {
         visibility('hidden', 'hidden', 'visible');
-        faceDown.setAttribute('class', `card ${computerHand[0].face}`);
+        faceDown.setAttribute('class', `card ${computerHand[0].face} small`);
         computerScoreElement.textContent = computerScore;
+        renderCardSize(computerSection);
         renderMessage();
     }
 }
