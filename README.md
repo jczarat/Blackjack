@@ -11,7 +11,6 @@
 - If you go over 21 you bust, and the dealer wins regardless of the dealer's hand.
 - If you are dealt 21 from the start (Ace & 10), you got a blackjack.
 
--
 
 ###Desktop Gameplay - Responsive Design
 <img src="https://i.imgur.com/qr5E0Cn.png">
