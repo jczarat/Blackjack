@@ -80,8 +80,8 @@ function deal() {
     dealCards(playerHand);
     computerScore = findScore(computerHand, computerScore);
     playerScore = findScore(playerHand, playerScore);
-    if (playerScore === 22) pocketAce(playerHand, playerScore);
-    if (computerScore === 22) pocketAce(computerHand, computerScore);
+    if (computerScore === 22) computerScore = pocketAce(computerHand, computerScore);
+    if (playerScore === 22) playerScore = pocketAce(playerHand, playerScore);
     renderDeal();
     checkForBlackjack();
 }
@@ -103,10 +103,14 @@ function stand() {
         computerScore = checkForAce(computerHand, computerScore, computerScoreElement);
         if (computerScore < 21) {
             stand();
+        } else {
+            renderStand();
+            determineWinner();
         }
+    } else {
+        renderStand();
+        determineWinner();
     }
-    renderStand();
-    determineWinner();
 }
 
 /*----- User Helper Functions -----*/
@@ -133,6 +137,7 @@ function checkForAce(hand, score, element) {
         if (card.value === 11) {
             card.value = 1;
             score = findScore(hand, score);
+            if (element !== computerScoreElement)
             element.textContent = score; 
         }
     });
