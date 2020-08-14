@@ -16,7 +16,7 @@
 <img src="https://i.imgur.com/qr5E0Cn.png">
 
 ### Mobile Gameplay - Dynamic Ace Values
-<img src="https://i.imgur.com/nFJFYtb.png" width="450"> <img src="https://i.imgur.com/u07Zi3x.png" width="450">
+<img src="https://i.imgur.com/nFJFYtb.png" width="405"> <img src="https://i.imgur.com/u07Zi3x.png" width="400">
 
 ## Technologies Used:
 
