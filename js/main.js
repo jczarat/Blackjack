@@ -158,11 +158,11 @@ function renderInit() {
 function renderDeal() {
     faceDown = document.createElement('div');
     const faceUp = document.createElement('div');
-    renderCard(faceDown, 'card back-red large', computerSection);
-    renderCard(faceUp, `card ${computerHand[1].face} large`, computerSection);
+    renderCard(faceDown, 'card back-red', computerSection);
+    renderCard(faceUp, `card ${computerHand[1].face}`, computerSection);
     playerHand.forEach(function(card) {
         const playerDeal = document.createElement('div');
-        renderCard(playerDeal, `card ${card.face} large`, playerSection);
+        renderCard(playerDeal, `card ${card.face}`, playerSection);
     });
     computerScoreElement.textContent = computerHand[1].value;
     playerScoreElement.textContent = playerScore;
@@ -172,14 +172,14 @@ function renderDeal() {
 
 function renderHit() {
     const newHit= document.createElement('div');
-    renderCard(newHit, `card ${playerHand[playerHand.length - 1].face} large`, playerSection);
+    renderCard(newHit, `card ${playerHand[playerHand.length - 1].face}`, playerSection);
     playerScoreElement.textContent = playerScore;
 }
 
 function renderStand() {
     for (let i = 2; i < computerHand.length; i++) {
         const newStand = document.createElement('div');
-        renderCard(newStand, `card ${computerHand[i].face} large`, computerSection);
+        renderCard(newStand, `card ${computerHand[i].face}`, computerSection);
         computerScoreElement.textContent = computerScore;
     }
 }
@@ -243,7 +243,7 @@ function determineWinner() {
 function endHand() {
     if (winner) {
         visibility('hidden', 'hidden', 'visible');
-        faceDown.setAttribute('class', `card ${computerHand[0].face} large`);
+        faceDown.setAttribute('class', `card ${computerHand[0].face}`);
         computerScoreElement.textContent = computerScore;
         renderMessage();
     }

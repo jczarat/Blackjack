@@ -5,16 +5,16 @@ body {
     background: radial-gradient(#00bf20, darkgreen);
     font-family: 'Bebas Neue', cursive;
     text-align: center;
-    height: 100vh;
+    height: 50vh;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 190px 400px 400px 100px;
+    grid-template-rows: 2fr 4fr 4fr 1fr;
 }
 
 /* -------- TEXT/TITLES ------- */
 
 h1 {
-    font-size: 80px;
+    font-size: 60px;
 }
 
 h2 {
@@ -22,18 +22,17 @@ h2 {
 }
 
 #message {
-    margin-top: -50px;
-    font-size: 35px;
+    margin-top: -30px;
 }
 
 #playertitle {
     font-family: 'Bebas Neue', cursive;
-    font-size: 50px;
+    font-size: 35px;
 }
 
 #computertitle {
     font-family: 'Bebas Neue', cursive;
-    font-size: 50px;
+    font-size: 35px;
 }
 
 .scores {
